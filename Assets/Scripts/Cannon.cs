@@ -29,11 +29,11 @@ public sealed class Cannon : MonoBehaviour
         Vector3 screenPosition = mainCamera.WorldToScreenPoint(transform.position);
         Vector3 mouseDirection = Input.mousePosition - screenPosition;
         mouseDirection.z = 0.0f;
-
+        
         var rotation = Quaternion.FromToRotation(startingDirection, mouseDirection);
         transform.localRotation = rotation;
 
-        if( Input.GetMouseButtonDown(0))
+        if ( Input.GetMouseButtonDown(0))
         {
             audioSrc.PlayOneShot(shootAudio);
 

@@ -12,18 +12,41 @@ public sealed class Bullet : MonoBehaviour
     public AudioClip explosionAudio;
     public Transform sizeScale;
 
+    public float rotateTo;
+
     private void Start()
     {
         bulletRigidbody.AddForce(impulse, ForceMode2D.Impulse);
         cannon = GameObject.Find("Cannon").GetComponent<Cannon>();
 
-        audioSrc = Object.FindObjectOfType<AudioSource>() as AudioSource;
+        if(cannon.transform.eulerAngles.z < 270)
+        {
+            rotateTo = cannon.transform.eulerAngles.z + 30;
+            transform.Rotate(0, 0, rotateTo);
+        }
+        else if(cannon.transform.eulerAngles.z > 270)
+        {
+            rotateTo = cannon.transform.eulerAngles.z + 90;
+            transform.Rotate(0, 0, rotateTo);
+        }
+
+        audioSrc = GameObject.Find("SoundEffects").GetComponent<AudioSource>();
+    }
+
+    private void Update()
+    {
+        Debug.Log(cannon.transform.eulerAngles.z);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         sizeScale = GetComponent<Transform>();
-        audioSrc.volume = sizeScale.localScale.x;
+
+        if (sizeScale.localScale.x == 1)
+        {
+            audioSrc.pitch = 0.75f;
+        }
+        else audioSrc.pitch = 1;
 
         audioSrc.PlayOneShot(explosionAudio);
         cannon.shakeDuration = 0.2f;
